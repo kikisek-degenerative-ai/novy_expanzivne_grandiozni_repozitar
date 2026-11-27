@@ -20,3 +20,7 @@ Průběžný záznam změn a stavu projektu pro synchronizaci mezi vývojáři a
 - Pravidla hry: výhra = přežít 12 čtvrtletí s bankami, veřejností i aparátem na ≥ 30; prohra = bankrot, hyperinflace (≥ 50 %), run na banky (≤ 10), převrat (loajalita ≤ 10), povstání (spokojenost ≤ 10) nebo nestabilní země po 12. čtvrtletí. Důvod je v `endReason`, po konci hry zůstává `turn` na posledním odehraném kole.
 - Pro Track B: ID možnosti má tvar `<idSpisu>.<klic>` (z něj motor skládá `resolvedDocumentIds`). Spisy a `getDocumentById` jsou v `src/data/documents.ts` (8 spisů). Hra je vyvážená na 2–3 spisy za kolo; bez rozhodnutí hráč prohrává.
 - Přidány testy ve Vitestu (`advance-turn.test.ts`, `documents.test.ts`). Pozor: v prostředí agenta nebyla síť, takže `npm run lint`, `npm run build` a `npm test` zatím nebyly spuštěny. Ověřeno jen přes `tsc` (strict) a testy se zástupnou náhradou Vitestu, vše prošlo (31/31).
+## 2026-11-27 – Track B: Pracovní stůl a UI prototypu (`feat/desk-prototype-ui`)
+- Vytvořeno UI pracovny hlavy státu v `src/components/` (`TopStatusBar.tsx`, `PolicyDocumentCard.tsx`, `GameEndOverlay.tsx`, `DeskShell.tsx`) a napojeno v `src/App.tsx`.
+- Přidán dočasný lokální mock adaptér `src/components/mock-desk-engine.ts` podle sdíleného kontraktu (bez zásahů do `src/simulation/`), včetně náhledu dopadů, posunu kol a obrazovky konce hry (`won`/`lost` + restart).
+- Ověřeno přes `npm run lint` a `npm run build`.
