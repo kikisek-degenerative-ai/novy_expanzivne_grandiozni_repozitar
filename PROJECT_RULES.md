@@ -2,6 +2,10 @@
 
 Tento dokument je jediným zdrojem pravdy (Single Source of Truth) pro všechny vývojáře i AI agenty (Claude Code, Antigravity / Gemini) pracující na tomto repozitáři.
 
+## Tým a přiřazení AI agentů
+- **Kristian** – pracuje s **Antigravity (Gemini)** (aktuálně Track B: UI a pracovní stůl).
+- **Štěpán** – pracuje s **Claude Code** (aktuálně Track A: simulační motor a data).
+
 ## 1. Jazyk a komunikace
 - **Komunikace s uživatelem:** Vždy v češtině.
 - **Vysvětlení provedené práce:** Po každém provedeném úkolu nebo příkazu vždy stručně a srozumitelně vysvětli, co se reálně stalo a proč (základní kontext, ne jen „hotovo“). Na požádání uživatele vysvětli postup ještě jednodušeji, laickým/amatérským jazykem bez technického žargonu.

@@ -1,7 +1,7 @@
 import { GameEndOverlay } from './GameEndOverlay.tsx';
 import { PolicyDocumentCard } from './PolicyDocumentCard.tsx';
 import { TopStatusBar } from './TopStatusBar.tsx';
-import type { DecisionOption, GameState, PolicyDocument } from './mock-desk-engine.ts';
+import type { DecisionOption, GameState, PolicyDocument } from '../simulation/types.ts';
 
 interface DeskShellProps {
   readonly state: GameState;

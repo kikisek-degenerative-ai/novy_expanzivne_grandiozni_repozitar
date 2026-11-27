@@ -1,4 +1,4 @@
-import type { DecisionOption, IndicatorDelta, PolicyDocument } from './mock-desk-engine.ts';
+import type { DecisionOption, IndicatorDelta, PolicyDocument } from '../simulation/types.ts';
 
 interface PolicyDocumentCardProps {
   readonly document: PolicyDocument;
