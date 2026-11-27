@@ -4,6 +4,8 @@ Tento dokument je jediným zdrojem pravdy (Single Source of Truth) pro všechny 
 
 ## 1. Jazyk a komunikace
 - **Komunikace s uživatelem:** Vždy v češtině.
+- **Vysvětlení provedené práce:** Po každém provedeném úkolu nebo příkazu vždy stručně a srozumitelně vysvětli, co se reálně stalo a proč (základní kontext, ne jen „hotovo“). Na požádání uživatele vysvětli postup ještě jednodušeji, laickým/amatérským jazykem bez technického žargonu.
+- **Proaktivní vedení (Next Step):** Kdykoli dokončíš ucelený kus práce nebo se nakupí více úprav, aktivně uživateli navrhni další nejvhodnější krok (např. kdy je vhodný čas na `commit`, `push`, sloučení do `main` nebo spuštění kontroly) a stručně vysvětli proč.
 - **Kód, názvy proměnných, souborů a commit messages:** Výhradně v angličtině.
 - **Dokumentace (README, technické poznámky):** Česky.
 
