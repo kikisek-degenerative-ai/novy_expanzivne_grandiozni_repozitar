@@ -37,7 +37,7 @@ Tento dokument je jediným zdrojem pravdy (Single Source of Truth) pro všechny 
   1. Instalací nového balíčku / knihovny.
   2. Smazáním existujícího souboru nebo složky.
   3. Spuštěním `git push` nebo změnou Git větví.
-- **Aktualizace kontextu:** Po dokončení většího úkolu zapiš stručné shrnutí (1–3 odrážky) do souboru `docs/PROGRESS.md`, aby druhý vývojář i druhý AI agent věděli, co se změnilo.
+- **Aktualizace kontextu:** Před zahájením práce si přečti `docs/PROGRESS.md` a `docs/TASKS.md` (sdílený datový kontrakt a rozdělení úkolů). Po dokončení většího úkolu zapiš stručné shrnutí (1–3 odrážky) do souboru `docs/PROGRESS.md`, aby druhý vývojář i druhý AI agent věděli, co se změnilo.
 
 ## 6. Kvalita kódu (Anti-patterns)
 - Piš modulární kód (jedna funkce / komponenta = jedna jasná odpovědnost).
