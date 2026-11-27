@@ -1,4 +1,4 @@
-import type { GameState, IndicatorDelta } from './mock-desk-engine.ts';
+import type { GameState, IndicatorDelta } from '../simulation/types.ts';
 
 interface TopStatusBarProps {
   readonly state: GameState;

@@ -1,4 +1,4 @@
-import type { GameState } from './mock-desk-engine.ts';
+import type { GameState } from '../simulation/types.ts';
 
 interface GameEndOverlayProps {
   readonly state: GameState;

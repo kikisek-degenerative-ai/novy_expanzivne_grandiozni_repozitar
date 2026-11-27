@@ -1,35 +1,33 @@
 import { useState } from 'react';
 import { DeskShell } from './components/DeskShell.tsx';
-import {
-  INITIAL_GAME_STATE,
-  TARGET_SURVIVAL_TURNS,
-  getDocumentForTurn,
-  mockAdvanceTurn,
-  type DecisionOption,
-  type GameState,
-} from './components/mock-desk-engine.ts';
+import { documents } from './data/documents.ts';
+import { advanceTurn } from './simulation/advance-turn.ts';
+import { FINAL_TURN } from './simulation/constants.ts';
+import { createInitialState } from './simulation/initial-state.ts';
+import type { DecisionOption, GameState } from './simulation/types.ts';
 
 export default function App() {
-  const [gameState, setGameState] = useState<GameState>(INITIAL_GAME_STATE);
+  const [gameState, setGameState] = useState<GameState>(() => createInitialState());
   const [selectedOption, setSelectedOption] = useState<DecisionOption | null>(null);
   const [lastTurnSummary, setLastTurnSummary] = useState<string | null>(null);
 
-  const currentDocument = getDocumentForTurn(gameState.turn);
+  const currentDocument =
+    documents.find((doc) => !gameState.resolvedDocumentIds.includes(doc.id)) ??
+    documents[(gameState.turn - 1) % documents.length];
 
   function handleAdvanceTurn() {
     if (!selectedOption || gameState.status !== 'playing') {
       return;
     }
 
-    // TODO(Track A integration): Replace mockAdvanceTurn with advanceTurn from src/simulation/
-    const result = mockAdvanceTurn(gameState, [selectedOption], currentDocument.id);
+    const result = advanceTurn(gameState, [selectedOption]);
     setGameState(result.nextState);
     setLastTurnSummary(result.summary);
     setSelectedOption(null);
   }
 
   function handleRestart() {
-    setGameState(INITIAL_GAME_STATE);
+    setGameState(createInitialState());
     setSelectedOption(null);
     setLastTurnSummary(null);
   }
@@ -37,7 +35,7 @@ export default function App() {
   return (
     <DeskShell
       state={gameState}
-      targetTurns={TARGET_SURVIVAL_TURNS}
+      targetTurns={FINAL_TURN}
       currentDocument={currentDocument}
       selectedOption={selectedOption}
       lastTurnSummary={lastTurnSummary}

@@ -24,3 +24,9 @@ Průběžný záznam změn a stavu projektu pro synchronizaci mezi vývojáři a
 - Vytvořeno UI pracovny hlavy státu v `src/components/` (`TopStatusBar.tsx`, `PolicyDocumentCard.tsx`, `GameEndOverlay.tsx`, `DeskShell.tsx`) a napojeno v `src/App.tsx`.
 - Přidán dočasný lokální mock adaptér `src/components/mock-desk-engine.ts` podle sdíleného kontraktu (bez zásahů do `src/simulation/`), včetně náhledu dopadů, posunu kol a obrazovky konce hry (`won`/`lost` + restart).
 - Ověřeno přes `npm run lint` a `npm run build`.
+
+## 2026-11-28 – Propojení Track A + Track B (`feat/desk-prototype-ui`)
+- Sloučen `origin/main` (včetně Tracku A) do `feat/desk-prototype-ui` a přepojeno UI (`src/App.tsx` a komponenty v `src/components/`) z mocku na skutečný simulační motor (`advanceTurn`, `createInitialState`, `FINAL_TURN`, `documents`).
+- Odstraněn dočasný mock adaptér `src/components/mock-desk-engine.ts`.
+- Do `PROJECT_RULES.md` doplněno rozdělení týmu (Kristian = Antigravity, Štěpán = Claude Code) a pravidla pro vysvětlování a proaktivní vedení kroků.
+- Ověřeno přes `npm run lint`, `npm run build` a `npm test` (31/31 testů prošlo).
