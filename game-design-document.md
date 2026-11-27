@@ -44,3 +44,7 @@ Aby hra nebyla jen čistým „tabulkovým“ simulátorem, obsahuje silnou vrst
 * **Formát:** Singleplayerová strategie / simulátor pro PC (webová nebo desktopová aplikace).
 * **Cílová skupina:** Fanoušci komplexních strategií, politiky a ekonomie (inspirováno mody do *Hearts of Iron*).
 * **Vývojový stack:** Vytvářeno za pomoci AI nástrojů (**Antigravity** a **Claude Code**) se synchronizací kódu přes **GitHub**.
+
+---
+
+Datum úpravy: 27/11/26, 21:09
