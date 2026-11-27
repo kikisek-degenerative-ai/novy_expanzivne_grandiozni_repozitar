@@ -11,3 +11,8 @@ Průběžný záznam změn a stavu projektu pro synchronizaci mezi vývojáři a
 - Inicializován projekt v React + TypeScript + Vite + Tailwind CSS + Vitest + ESLint přes `npm` (včetně `.gitignore`).
 - Vytvořena struktura složek `src/simulation/`, `src/components/` a `src/data/` dle konvencí (`kebab-case` pro soubory, `PascalCase` pro komponenty).
 - Ověřen build, lint a základní test přes `npm run build`, `npm run lint` a `npm test`.
+
+## 2026-11-27 – Track B: Pracovní stůl a UI prototypu (`feat/desk-prototype-ui`)
+- Vytvořeno UI pracovny hlavy státu v `src/components/` (`TopStatusBar.tsx`, `PolicyDocumentCard.tsx`, `GameEndOverlay.tsx`, `DeskShell.tsx`) a napojeno v `src/App.tsx`.
+- Přidán dočasný lokální mock adaptér `src/components/mock-desk-engine.ts` podle sdíleného kontraktu (bez zásahů do `src/simulation/`), včetně náhledu dopadů, posunu kol a obrazovky konce hry (`won`/`lost` + restart).
+- Ověřeno přes `npm run lint` a `npm run build`.
