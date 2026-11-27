@@ -47,4 +47,13 @@ Aby hra nebyla jen čistým „tabulkovým“ simulátorem, obsahuje silnou vrst
 
 ---
 
+## 5. MVP Scope
+První hratelná verze (MVP) se zaměřuje čistě na ověření jádra herní smyčky:
+* **Pouze pracovna hlavy státu:** Hráč pracuje u jednoho stolu, kde řeší příchozí spisy a dekrety.
+* **Základní ukazatele:** Sledování hlavních ekonomických a politických ukazatelů na horní liště.
+* **Rozhodování o spisech:** Výběr z možností u jednotlivých dokumentů a tahový posun do dalšího kola/čtvrtletí.
+* **Další fáze:** Ministerstvo financí (detailní grafy) a Ministerstvo zahraničí (mapa, telegramy, diplomacie) budou doplněny až v navazujících fázích.
+
+---
+
 Datum úpravy: 27/11/26, 21:09

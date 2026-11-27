@@ -8,9 +8,9 @@ Tento dokument je jediným zdrojem pravdy (Single Source of Truth) pro všechny 
 - **Dokumentace (README, technické poznámky):** Česky.
 
 ## 2. Tech Stack & Nástroje
-- **Jazyk / Framework:** [Doplnit, např. Next.js 15, TypeScript, Tailwind CSS]
-- **Package Manager:** [Vybrat striktně jeden, např. `npm` — ZÁKAZ používat `yarn` nebo `pnpm`]
-- **Testování / Linting:** [Např. ESLint, Prettier, Vitest]
+- **Jazyk / Framework:** React, TypeScript, Vite, Tailwind CSS
+- **Package Manager:** `npm` — ZÁKAZ používat `yarn` nebo `pnpm`
+- **Testování / Linting:** Vitest, ESLint
 
 ## 3. Struktura repozitáře a konvence
 - `/src` – veškerý zdrojový kód aplikace
