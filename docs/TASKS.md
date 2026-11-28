@@ -1,125 +1,123 @@
-# Rozdělení práce pro první hratelný prototyp (MVP)
+# Plán dalších prací (Post-MVP Roadmapa – 5 hlavních tasků)
 
-Tento dokument definuje paralelní rozdělení práce mezi dva vývojáře a jejich AI agenty (Claude Code a Antigravity) tak, aby se navzájem neblokovali a neměnili stejné soubory.
-
----
-
-## 1. Sdílený datový kontrakt (hranice mezi moduly)
-
-Oba moduly komunikují výhradně přes rozhraní definovaná v `src/simulation/types.ts`.
-
-### Přesné názvy souborů a rozhraní (`src/simulation/types.ts`)
-
-```ts
-export type GameStatus = 'playing' | 'won' | 'lost';
-
-export interface EconomicIndicators {
-  readonly treasury: number;      // Státní pokladna / rozpočet
-  readonly inflation: number;     // Inflace (%)
-  readonly unemployment: number;  // Nezaměstnanost (%)
-  readonly bankStability: number; // Stabilita bank a institucí (0–100)
-}
-
-export interface PoliticalIndicators {
-  readonly publicApproval: number; // Spokojenost veřejnosti (0–100)
-  readonly factionLoyalty: number; // Loajalita / podpora aparátu a armády (0–100)
-}
-
-export interface GameState {
-  readonly turn: number; // Číslo kola / čtvrtletí (začíná na 1)
-  readonly economics: EconomicIndicators;
-  readonly politics: PoliticalIndicators;
-  readonly status: GameStatus;
-  readonly endReason: string | null; // Konkrétní důvod výhry nebo prohry
-  readonly resolvedDocumentIds: readonly string[];
-}
-
-export interface IndicatorDelta {
-  readonly treasury?: number;
-  readonly inflation?: number;
-  readonly unemployment?: number;
-  readonly bankStability?: number;
-  readonly publicApproval?: number;
-  readonly factionLoyalty?: number;
-}
-
-export interface DecisionOption {
-  readonly id: string;
-  readonly label: string;
-  readonly summary: string;
-  readonly effects: IndicatorDelta;
-}
-
-export interface PolicyDocument {
-  readonly id: string;
-  readonly title: string;
-  readonly sender: string;
-  readonly description: string;
-  readonly options: readonly DecisionOption[];
-}
-
-export interface TurnResult {
-  readonly nextState: GameState;
-  readonly summary: string;
-}
-```
-
-> **Pravidlo pro změny sdílených typů:** Jakákoliv úprava rozhraní v `src/simulation/types.ts` musí být okamžitě zapsána do `docs/PROGRESS.md` i do tohoto souboru (`docs/TASKS.md`), aby na ni mohl druhý agent reagovat.
+První hratelný prototyp (MVP: propojení simulačního motoru `Track A` a pracovny hlavy státu `Track B`) je hotový v `main`. Tento dokument definuje **5 navazujících tasků**, jejich prioritu, závislosti a rozdělení mezi **Kristiana (Antigravity)** a **Štěpána (Claude Code)** tak, aby mohli pracovat co nejvíce paralelně.
 
 ---
 
-## 2. Track A — Simulační motor (Claude Code / Vývojář A)
+## Přehled priorit a paralelismu
 
-- **Větev:** `feat/turn-simulation-engine`
-- **Vlastněné složky:** `src/simulation/` a `src/data/`
-- **Zákaz úprav:** `src/components/` a `src/App.tsx`
+| Priorita | Task | Kdo na něm dělá | Paralelismus a závislosti |
+| :--- | :--- | :--- | :--- |
+| **P1** | **Task 1:** Více spisů za kolo + 20+ událostí a řetězové následky | Štěpán (motor & data) + Kristian (UI stolu) | **Ihned paralelně** (jen si předem potvrdí případný nový typ pro historii/balíček) |
+| **P2** | **Task 2:** Přepínání ministerstev + Ministerstvo financí (grafy) | Štěpán (historie & rozpočet) + Kristian (navigace & grafy) | **Paralelně** po Tasku 1 (nebo souběžně s Taskem 3) |
+| **P2** | **Task 3:** Taktilní byrokratický vizuál (*Papers, Please* vibe) a audio | Kristian (pouze UI & CSS) | **Zcela paralelně** kdykoliv – nezasahuje do `src/simulation/` |
+| **P3** | **Task 4:** Ministerstvo zahraničí (mapa regionu + telegramy) | Štěpán (diplomacie v motoru) + Kristian (mapa & telegramy) | **Navazuje na Task 2** (využívá přepínání ministerstev) |
+| **P3** | **Task 5:** Ukládání hry (`localStorage`), briefing a balanční testy | Kristian (uložení & briefing) + Štěpán (simulační testy rovnováhy) | **Průběžně / před vydáním** – finální doladění hratelnosti |
 
-### Úkoly
-1. Definovat sdílené typy (`GameState`, `PolicyDocument`, `DecisionOption`, `TurnResult`) v `src/simulation/types.ts` podle kontraktu výše.
-2. Implementovat čistou funkci `advanceTurn(state: GameState, chosenDecisions: readonly DecisionOption[]): TurnResult` bez jakékoli závislosti na Reactu nebo UI.
-3. Zapojit vyvážený set ekonomických a politických ukazatelů:
-   - **Ekonomika:** pokladna/rozpočet (`treasury`), inflace (`inflation`), nezaměstnanost (`unemployment`), stabilita bank/institucí (`bankStability`).
-   - **Politika:** loajalita/podpora (`factionLoyalty`), spokojenost veřejnosti (`publicApproval`).
-   - Definovat jasné podmínky výhry (např. přežití do cílového kola při udržení stability) a konkrétní důvody prohry (bankrot, hyperinflace, run na banky, převrat/ztráta loajality, lidové povstání) zapisované do `endReason`.
-4. Vytvořit prvních 5–8 ukázkových spisů v `src/data/` (např. `src/data/documents.ts`) a základní jednotkové testy ve Vitestu (`src/simulation/*.test.ts`).
-
----
-
-## 3. Track B — Pracovní stůl a UI prototypu (Antigravity / Vývojář B)
-
-- **Větev:** `feat/desk-prototype-ui`
-- **Vlastněné složky:** `src/components/` a propojení v `src/App.tsx`
-- **Zákaz úprav:** Výpočetní logika v `src/simulation/` (případné dočasné mocky držet odděleně mimo `src/simulation/`, např. přímo v UI vrstvě nebo lokálním adaptéru, dokud není Track A sloučen).
-
-### Úkoly
-1. Vytvořit jednoduché a přehledné rozhraní pracovny hlavy státu v `src/components/` (`PascalCase` soubory):
-   - Horní lišta s aktuálními ekonomickými a politickými ukazateli a číslem kola/čtvrtletí.
-   - Karta aktuálního spisu (`PolicyDocument`) se zobrazením odesílatele, popisu a tlačítek pro jednotlivá rozhodnutí (`DecisionOption`).
-   - Tlačítko pro posun do dalšího kola.
-2. Napojit UI na dočasná mock data odpovídající sdíleným typům (`GameState`, `PolicyDocument`, `DecisionOption`, `TurnResult`) a po sloučení Tracku A přepojit přímo na `advanceTurn`.
-3. Zobrazit přehledný konec hry (stav `won` / `lost` včetně konkrétního důvodu z `endReason` a možnosti restartu).
+### Doporučené pořadí v čase
+1. **Vlna 1 (teď):** Oba paralelně na **Tasku 1** (Štěpán data a výběr spisů, Kristian podpora více spisů na stole).
+2. **Vlna 2:** Paralelně **Task 2** (Ministerstvo financí) a **Task 3** (vizuální atmosféra a razítka).
+3. **Vlna 3:** **Task 4** (Ministerstvo zahraničí) a finální **Task 5** (ukládání a balanc).
 
 ---
 
-## 4. Postup pro oba agenty (Prompt-ready instrukce)
+## Task 1 (P1): Více spisů za kolo, zásoba 20+ událostí a řetězové následky
 
-Každý vývojář si nejprve z aktualizované větve `main` vytvoří svou větev a poté zkopíruje příslušný prompt do svého AI nástroje.
+**Proč je to priorita 1:** Simulační motor je vyvážený na 2–3 spisy za kolo, ale UI zatím posílá jen 1 spis za kolo a po 8 kolech se spisy opakují.
 
-### Startovní prompt pro Track A (Claude Code)
+### Část pro Štěpána (Claude Code)
+- **Větev:** `feat/document-deck-and-chains`
+- **Vlastněné soubory:** `src/simulation/`, `src/data/`
+- **Úkoly:**
+  1. Rozšířit `src/data/documents.ts` ze 8 na **20–24 tematických spisů** (ekonomika, armáda/aparát, veřejné služby, krize).
+  2. Vytvořit čistou funkci `selectDocumentsForTurn(state: GameState, pool: readonly PolicyDocument[], count?: number): readonly PolicyDocument[]`, která vybere 2–3 neřešené spisy pro aktuální kolo.
+  3. Přidat podporu pro **podmíněné/následné spisy** (např. pokud hráč dříve vybral konkrétní volbu nebo nějaký ukazatel klesl pod kritickou mez, objeví se specifický krizový spis).
+  4. Pokrýt výběr spisů a následné řetězce testy ve Vitestu.
 
-```text
-Přečti si PROJECT_RULES.md, CLAUDE.md, docs/PROGRESS.md a docs/TASKS.md. Zkontroluj git status a ověř, že jsi na větvi feat/turn-simulation-engine.
-Pracuješ na Tracku A (vlastníš pouze src/simulation/ a src/data/, neupravuj src/components/ ani src/App.tsx).
-Implementuj sdílené typy v src/simulation/types.ts podle kontraktu v docs/TASKS.md, čistou funkci advanceTurn(state, chosenDecisions) vracící TurnResult (včetně všech ekonomických a politických ukazatelů i podmínek výhry/prohry), vytvoř 5–8 ukázkových spisů v src/data/documents.ts a napiš jednotkové testy ve Vitestu.
-Po dokončení spusť npm run lint, npm run build a npm test, zapiš stručné shrnutí do docs/PROGRESS.md a zeptej se mě před git push.
-```
+### Část pro Kristiana (Antigravity)
+- **Větev:** `feat/multi-document-desk`
+- **Vlastněné soubory:** `src/components/`, `src/App.tsx`
+- **Úkoly:**
+  1. Upravit `App.tsx` a `DeskShell.tsx`, aby v jednom kole leželo na stole **2–3 spisů najednou** (přepínání mezi nimi pomocí záložek / obálek na stole).
+  2. Umožnit hráči vybrat rozhodnutí u každého spisu v kole zvlášť (s vizuálním označením, které spisy už mají vybranou volbu a které ještě čekají).
+  3. Tlačítko **„Podepsat a posunout kolo“** aktivovat až po vyřešení všech spisů v kole a předat funkci `advanceTurn(state, chosenDecisions)` celé pole rozhodnutí.
+  4. V horní liště (`TopStatusBar.tsx`) zobrazit **souhrnný náhled dopadů** ze všech vybraných rozhodnutí v daném kole.
 
-### Startovní prompt pro Track B (Antigravity)
+---
 
-```text
-Přečti si PROJECT_RULES.md, docs/PROGRESS.md a docs/TASKS.md. Zkontroluj git status a ověř, že jsi na větvi feat/desk-prototype-ui.
-Pracuješ na Tracku B (vlastníš pouze src/components/ a propojení v src/App.tsx, neupravuj výpočetní logiku v src/simulation/).
-Vytvoř v src/components/ přehledné UI pracovny hlavy státu (horní lišta s ukazateli a číslem kola/čtvrtletí, karta aktuálního spisu s možnostmi rozhodnutí, tlačítko pro posun do dalšího kola a obrazovka konce hry s důvodem výhry/prohry).
-Použij datové struktury podle kontraktu v docs/TASKS.md (dokud není sloučen Track A, napoj UI na lokální mock podle těchto typů).
-Po dokončení spusť npm run lint a npm run build, zapiš stručné shrnutí do docs/PROGRESS.md a zeptej se mě před git push.
-```
+## Task 2 (P2): Přepínání ministerstev a Ministerstvo financí (grafy & rozpočet)
+
+**Proč je to priorita 2:** Podle herního návrhu (*Game Design Document*) hra staví na přepínání lokací místo jednoho statického stolu.
+
+### Část pro Štěpána (Claude Code)
+- **Větev:** `feat/finance-history-model`
+- **Vlastněné soubory:** `src/simulation/`
+- **Úkoly:**
+  1. Rozšířit `GameState` o historii ukazatelů po kolech (`history: readonly TurnSnapshot[]`), aby bylo z čeho kreslit grafy vývoje.
+  2. Vyexportovat čistou funkci pro přehled rozpočtu v aktuálním kole (základní příjmy, daňový dopad nezaměstnanosti a bank, pevné výdaje, čisté saldo).
+  3. Zapsat změnu `GameState` do `docs/PROGRESS.md` a aktualizovat testy.
+
+### Část pro Kristiana (Antigravity)
+- **Větev:** `feat/ministry-of-finance-ui`
+- **Vlastněné soubory:** `src/components/`, `src/App.tsx`
+- **Úkoly:**
+  1. Přidat do `DeskShell.tsx` horní/boční přepínač lokací: **Pracovna hlavy státu** ↔ **Ministerstvo financí**.
+  2. Vytvořit komponentu `MinistryOfFinanceView.tsx`:
+     - Přehledové grafy vývoje ukazatelů v čase (SVG křivky pro pokladnu, inflaci, nezaměstnanost a stabilitu bank).
+     - Rozpis státního rozpočtu (příjmy vs. výdaje a varování před deficitem).
+
+---
+
+## Task 3 (P2): Taktilní byrokratický vizuál (*Papers, Please* / 70.–80. léta)
+
+**Proč je to priorita 2:** Současné rozhraní je čistý funkční prototyp. Chybí mu nezaměnitelná atmosféra starého úředního stolu a „úřednického“ napětí.
+
+- **Vlastník:** **Kristian (Antigravity)** *(lze dělat zcela paralelně bez zásahu do simulace)*
+- **Větev:** `feat/tactile-bureaucracy-ui`
+- **Vlastněné soubory:** `src/components/`, `src/index.css`
+- **Úkoly:**
+  1. Stylizovat spisy jako autentické úřední dokumenty (papírová textura, hlavička ministerstva, strojopisná typografie, pořadové číslo spisu).
+  2. Přidat taktilní interakci podpisu: po vybrání možnosti a posunu kola zobrazit vizuální **razítko** (*SCHVÁLENO* / *ROZHODNUTO*) s krátkou animací.
+  3. Přetvořit strohé `Hlášení:` na stylizovaný **Úřední věstník / Zprávu z kola**, která srozumitelně shrne, co se změnilo.
+  4. *(Volitelné)* Přidat jednoduché syntetizované zvuky přes Web Audio API (cvaknutí razítka, šustění papíru) s tlačítkem pro ztlumení v liště.
+
+---
+
+## Task 4 (P3): Ministerstvo zahraničí a diplomacie (mapa regionu + telegramy)
+
+**Proč je to priorita 3:** Třetí plánovaná lokace z *Game Design Documentu*, která propojuje domácí politiku se sousedními státy. Navazuje na hotové přepínání lokací z Tasku 2.
+
+### Část pro Štěpána (Claude Code)
+- **Větev:** `feat/diplomacy-simulation`
+- **Vlastněné soubory:** `src/simulation/`, `src/data/`
+- **Úkoly:**
+  1. Definovat 3 sousední státy (např. průmyslový soused, vojenský rival, obchodní partner) se stavem vztahů (`-100` až `+100`) a obchodními vazbami.
+  2. Propojit zahraniční vztahy s ekonomikou a loajalitou armády (např. sankce zvedají inflaci, obchodní dohoda pomáhá pokladně).
+  3. Přidat diplomatické telegramy / události s vlastními volbami odpovědi.
+
+### Část pro Kristiana (Antigravity)
+- **Větev:** `feat/ministry-of-foreign-affairs-ui`
+- **Vlastněné soubory:** `src/components/`
+- **Úkoly:**
+  1. Přidat třetí záložku **Ministerstvo zahraničí** do přepínače lokací.
+  2. Vytvořit komponentu `ForeignAffairsView.tsx` se stylizovanou mapou regionu (SVG), stavem vztahů se sousedy a schránkou příchozích/odchozích telegramů.
+
+---
+
+## Task 5 (P3): Ukládání hry, herní briefing a balanční testy
+
+**Proč je to priorita 3:** Zajišťuje, aby hra fungovala jako kompletní zážitek pro hráče i po obnovení stránky a byla férově vyvážená.
+
+### Část pro Kristiana (Antigravity)
+- **Větev:** `feat/save-and-briefing`
+- **Vlastněné soubory:** `src/App.tsx`, `src/components/`
+- **Úkoly:**
+  1. Automatické ukládání rozehrané hry do `localStorage` (při F5 hráč pokračuje tam, kde skončil) + bezpečné tlačítko **„Nová hra“** s potvrzením.
+  2. Krátký úvodní **briefing před 1. kolem** (kontext po revoluci, jak fungují ukazatele a cíl přežít 12 čtvrtletí).
+
+### Část pro Štěpána (Claude Code)
+- **Větev:** `feat/balance-simulations`
+- **Vlastněné soubory:** `src/simulation/`
+- **Úkoly:**
+  1. Napsat v Vitestu simulační testy pro celé 12kolové průchody (vyvážená strategie musí umožnit výhru, extrémní nebo pasivní strategie musí vést k očekávaným typům prohry).
+  2. Na základě výsledků doladit hodnoty v `src/simulation/constants.ts` a v `src/data/documents.ts`.
